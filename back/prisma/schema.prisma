@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model booking {
+  idBooking  Int            @id @default(autoincrement())
+  solutions  solutions_enum @default(inShield)
+  date       DateTime       @db.Date
+  disponible Boolean?
+  userId     Int
+  users      users          @relation(fields: [userId], references: [idUser])
+}
+
+model users {
+  idUser  Int       @id @default(autoincrement())
+  nom     String    @db.VarChar(255)
+  prenom  String    @db.VarChar(255)
+  tel     String?   @db.VarChar(25)
+  company String    @db.VarChar(255)
+  booking booking[]
+}
+
+enum solutions_enum {
+  inShield @map("4inShield")
+  inRadar @map("4inRadar")
+  inEnrich @map("4inEnrich")
+  inGen @map("4inGen")
+}
